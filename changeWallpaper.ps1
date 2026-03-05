@@ -36,3 +36,8 @@ $user32 = Add-Type -MemberDefinition $signature -Name "User32" -Namespace "Win32
 $user32::SystemParametersInfo(0x0014, 0, $path, 0x01 -bor 0x02)
 
 Write-Host "Da doi wallpaper! Neu van khong thay doi, hay thu logout va login lai." -ForegroundColor Yellow
+
+# Thêm vào cuối script:
+Stop-Process -Name explorer -Force
+Start-Process explorer
+
