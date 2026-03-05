@@ -1,23 +1,25 @@
-$url = Read-Host "Nhap link anh wallpaper"
-$username = $env:USERNAME
-$path = "C:\Users\$username\Pictures\wallpaper.jpg"
+$base = "https://athena.edu.vn/content/uploads/"
+$file = Read-Host "Nhap ten file (vi du: image.jpg)"
+$url = $base + $file
+$path = "$env:USERPROFILE\Pictures\wallpaper.jpg"
 
-# Tạo thư mục nếu chưa tồn tại
-if (!(Test-Path "C:\Users\$username\Pictures")) {
-    New-Item -ItemType Directory -Path "C:\Users\$username\Pictures" -Force
+# Kiểm tra và tạo thư mục Pictures
+if (!(Test-Path "$env:USERPROFILE\Pictures")) {
+    New-Item -ItemType Directory -Path "$env:USERPROFILE\Pictures"
 }
 
 # Tải ảnh
+Write-Host "Dang tai anh tu: $url" -ForegroundColor Cyan
 Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
 
-# Xóa cache wallpaper cũ
-Remove-Item "C:\Users\$username\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper" -ErrorAction SilentlyContinue
+# Xóa cache cũ
+Remove-Item "$env:APPDATA\Microsoft\Windows\Themes\TranscodedWallpaper" -ErrorAction SilentlyContinue
 
-# Set wallpaper
+# Đổi wallpaper
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name Wallpaper -Value $path
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name WallpaperStyle -Value 10
 
-# Refresh desktop
+# Refresh
 Rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
 Write-Host "Da doi wallpaper thanh cong!" -ForegroundColor Green
